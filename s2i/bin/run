@@ -1,0 +1,3 @@
+#!/bin/bash
+
+echo "Please use chained builds to extract the artefact and add it to a small and secure image and use that image for your deployments. More information regarding chained builds can be found here: https://blog.openshift.com/chaining-builds/" && sleep 10
