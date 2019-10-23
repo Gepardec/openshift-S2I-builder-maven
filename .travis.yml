@@ -14,7 +14,12 @@ env:
 script:
 - docker build -t ${ORGANIZATION}/${REPO}:${TAG} --build-arg JAVA_VERSION=${JAVA_VERSION} --no-cache .
 # security check
-- .travis/security-scan.sh ${ORGANIZATION}/${REPO}:${TAG}
+- >
+  if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then 
+    .travis/security-scan.sh ${ORGANIZATION}/${REPO}:${TAG}
+  else
+    echo "security scan does not run for pull request. For further information see: https://docs.travis-ci.com/user/pull-requests/#pull-requests-and-security-restrictions"
+  fi
 # push image
 - >
   if [ "$TRAVIS_BRANCH" == "master" ]; then
