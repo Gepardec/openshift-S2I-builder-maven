@@ -7,22 +7,28 @@ services:
 - docker
 
 env:
-- JAVA_VERSION='java-11-openjdk'    REPO='s2i-builder-maven' TAG='latest'
-- JAVA_VERSION='java-11-openjdk'    REPO='s2i-builder-maven' TAG='11'
-- JAVA_VERSION='java-1.8.0-openjdk' REPO='s2i-builder-maven' TAG='8'
+- MAVEN_TAG='latest'     REPO='s2i-builder-maven' TAG='latest'  
+- MAVEN_TAG='3-jdk-14'   REPO='s2i-builder-maven' TAG='3-jdk-14'
+- MAVEN_TAG='3-jdk-13'   REPO='s2i-builder-maven' TAG='3-jdk-13'
+- MAVEN_TAG='3-jdk-12'   REPO='s2i-builder-maven' TAG='3-jdk-12'
+- MAVEN_TAG='3-jdk-11'   REPO='s2i-builder-maven' TAG='3-jdk-11'
+- MAVEN_TAG='3-jdk-10'   REPO='s2i-builder-maven' TAG='3-jdk-10'
+- MAVEN_TAG='3-jdk-9'    REPO='s2i-builder-maven' TAG='3-jdk-9'
+- MAVEN_TAG='3-jdk-8'    REPO='s2i-builder-maven' TAG='3-jdk-8'
+- MAVEN_TAG='3-jdk-7'    REPO='s2i-builder-maven' TAG='3-jdk-7'
 
 script:
-- docker build -t ${ORGANIZATION}/${REPO}:${TAG} --build-arg JAVA_VERSION=${JAVA_VERSION} --no-cache .
-# security check
+- sed -i "s/FROM maven:.*/FROM maven:${MAVEN_TAG}/g" Dockerfile
+- docker build -t ${ORGANIZATION}/${REPO}:${TAG} --no-cache .
+# security check and push to dockerhub
 - >
   if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then 
     .travis/security-scan.sh ${ORGANIZATION}/${REPO}:${TAG}
+    if [ "$TRAVIS_BRANCH" == "master" ]; then
+      echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
+      docker push ${ORGANIZATION}/${REPO}
+    fi
   else
     echo "security scan does not run for pull request. For further information see: https://docs.travis-ci.com/user/pull-requests/#pull-requests-and-security-restrictions"
   fi
-# push image
-- >
-  if [ "$TRAVIS_BRANCH" == "master" ]; then
-    echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
-    docker push ${ORGANIZATION}/${REPO}
-  fi
+  
