@@ -9,7 +9,7 @@ set -f # do not interpret * as wildcard -> required for maven mirrors
 
 readonly POM_FILE="pom.xml"
 readonly GRADLE_FILE="build.gradle"
-readonly MVN_MIRROR_SETTING_XML="/etc/maven/BUILDER_MVN_MIRROR.xml"
+readonly MVN_MIRROR_SETTING_XML="/usr/share/maven/ref/BUILDER_MVN_MIRROR.xml"
 
 ####################
 # GLOBAL VARIABLES #

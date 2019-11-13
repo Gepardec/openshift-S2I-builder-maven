@@ -1,4 +1,4 @@
-FROM centos:8
+FROM maven:3-jdk-11
 
 ENV BUILDER_CONTEXT_DIR="" \
     BUILDER_MVN_MIRROR="" \
@@ -6,27 +6,18 @@ ENV BUILDER_CONTEXT_DIR="" \
     BUILDER_MVN_OPTIONS=""
     
 ARG S2IDIR="/home/s2i"
-ARG APPDIR="/deployments"
-ARG JAVA_VERSION="java-11-openjdk"
-ARG MAVEN_VERSION="3.5.4"
-
-LABEL io.k8s.description="S2I Maven Builder (Java: ${JAVA_VERSION}, Maven: ${MAVEN_VERSION})" \
+LABEL io.k8s.description="S2I Maven Builder (based on docker.io/maven:${TAG})" \
       io.k8s.display-name="S2I Maven Builder" \
       io.openshift.tags="builder,java,maven" \
       io.openshift.s2i.scripts-url="image://${S2IDIR}/bin" \
       maintainer="Clemens Kaserer <clemens.kaserer@gepardec.com>"
 
-RUN mkdir -p ${APPDIR}/target && \
-    yum install -y \
-        ${JAVA_VERSION} \
-        maven-${MAVEN_VERSION}} && \
-    yum clean all && \
-    chgrp -R 0 ${APPDIR} /etc/maven && \ 
-    chmod -R g+rwX ${APPDIR} /etc/maven
-
 COPY s2i ${S2IDIR}
-RUN chgrp -R 0 ${S2IDIR} && \
-    chmod -R g+rwX ${S2IDIR}
+
+ARG APPDIR="/deployments"
+RUN mkdir -p ${APPDIR}/target && \
+    chgrp -R 0 ${APPDIR} ${S2IDIR} /usr/share/maven/ref/ && \ 
+    chmod -R g+rwX ${APPDIR} ${S2IDIR} /usr/share/maven/ref/
 
 USER 1001
 
