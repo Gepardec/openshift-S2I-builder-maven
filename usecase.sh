@@ -10,7 +10,7 @@ oc new-project s2i-builder-maven \
                   application used here is available on github (wildfly/quickstart)."
 
 ### 2) create the builder image 
-oc new-build https://github.com/gepardec/openshift-S2I-builder-maven#1.0.0 --name=s2i-builder-maven
+oc new-build https://github.com/gepardec/openshift-builder-maven#1.0.0 --name=s2i-builder-maven
 oc logs bc/s2i-builder-maven -f
 
 ### 3) use the builder to build your artefact
