@@ -79,7 +79,7 @@ if [ "${return_code}" -eq "0" ]; then
   execute "oc logs \
               --follow \
               bc/runtime-${GIT_BRANCH_NORMALIZED}-${MAVEN_TAG}"
-
+  oc new-app runtime-feature-cicd:3-jdk-10 --name=runtime-feature-cicd-3-jdk-10
   execute "oc new-app \
               runtime-${GIT_BRANCH_NORMALIZED}:${MAVEN_TAG} \
               --name=hello-world-${GIT_BRANCH_NORMALIZED}-${MAVEN_TAG}"
