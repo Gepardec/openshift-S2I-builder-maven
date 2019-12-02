@@ -31,7 +31,7 @@ readonly -f execute
 execute "oc new-build \
             --name=builder-${GIT_BRANCH_NORMALIZED}-${MAVEN_TAG} \
             --docker-image=maven:${MAVEN_TAG} \
-            --labels='from=travis' \
+            --labels='branch=${GIT_BRANCH_NORMALIZED}' \
             -n ${namespace} \
             --strategy docker \
             --to=builder-${GIT_BRANCH_NORMALIZED}:${MAVEN_TAG} \
@@ -60,7 +60,7 @@ if [ "${return_code}" -eq "0" ]; then
               --name=binary-artefact-${GIT_BRANCH_NORMALIZED}-${MAVEN_TAG} \
               --env=BUILDER_CONTEXT_DIR=helloworld \
               --env=BUILDER_MVN_OPTIONS='-P openshift' \
-              --labels='from=travis' \
+              --labels='branch=${GIT_BRANCH_NORMALIZED}' \
               --to=binary-artefact-${GIT_BRANCH_NORMALIZED}:${MAVEN_TAG} \
               builder-${GIT_BRANCH_NORMALIZED}:${MAVEN_TAG}~https://github.com/wildfly/quickstart#18.0.0.Final"   
   execute "sleep ${sleep_time}"
@@ -71,7 +71,7 @@ if [ "${return_code}" -eq "0" ]; then
   execute "oc new-build \
               --name=runtime-${GIT_BRANCH_NORMALIZED}-${MAVEN_TAG} --docker-image=jboss/wildfly \
               --dockerfile=$'FROM jboss/wildfly\nCOPY ROOT.war /opt/jboss/wildfly/standalone/deployments/ROOT.war' \
-              --labels='from=travis' \
+              --labels='branch=${GIT_BRANCH_NORMALIZED}' \
               --source-image=binary-artefact-${GIT_BRANCH_NORMALIZED}:${MAVEN_TAG} \
               --source-image-path=/deployments/target/ROOT.war:. \
               --to=runtime-${GIT_BRANCH_NORMALIZED}:${MAVEN_TAG}"
@@ -79,24 +79,29 @@ if [ "${return_code}" -eq "0" ]; then
   execute "oc logs \
               --follow \
               bc/runtime-${GIT_BRANCH_NORMALIZED}-${MAVEN_TAG}"
-  oc new-app runtime-feature-cicd:3-jdk-10 --name=runtime-feature-cicd-3-jdk-10
+              
   execute "oc new-app \
               runtime-${GIT_BRANCH_NORMALIZED}:${MAVEN_TAG} \
-              --name=hello-world-${GIT_BRANCH_NORMALIZED}-${MAVEN_TAG}"
+              --labels='branch=${GIT_BRANCH_NORMALIZED}' \
+              --name=run-${GIT_BRANCH_NORMALIZED}-${MAVEN_TAG}"
+
+  execute "oc delete is/run-${GIT_BRANCH_NORMALIZED}-${MAVEN_TAG}"
+
   execute "sleep ${sleep_time}"
   execute "oc rollout cancel \
-              hello-world-${GIT_BRANCH_NORMALIZED}-${MAVEN_TAG} \
+              run-${GIT_BRANCH_NORMALIZED}-${MAVEN_TAG} \
               || true"
   execute "oc rollout latest \
-              hello-world-${GIT_BRANCH_NORMALIZED}-${MAVEN_TAG} \
+              run-${GIT_BRANCH_NORMALIZED}-${MAVEN_TAG} \
               --again \
               || true"
   execute "oc expose \
-              svc/hello-world-${GIT_BRANCH_NORMALIZED}-${MAVEN_TAG}"
+              --labels='branch=${GIT_BRANCH_NORMALIZED}' \
+              svc/run-${GIT_BRANCH_NORMALIZED}-${MAVEN_TAG}"
 fi
 
 route=$(oc describe \
-            route/hello-world-${GIT_BRANCH_NORMALIZED}-${MAVEN_TAG} \
+            route/run-${GIT_BRANCH_NORMALIZED}-${MAVEN_TAG} \
         | grep 'Requested Host:' \
         | cut -d ':' -f2 \
         | xargs)
