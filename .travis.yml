@@ -1,13 +1,8 @@
----
 version: "~> 1.0"
-
 os: linux
-
 language: shell
-
 services:
   - docker
-
 notifications:
   email:
     on_success: never
@@ -15,14 +10,13 @@ notifications:
   slack:
     if: branch = master
     rooms:
-      - secure: "d/H7HxyDY0INUo2vvRLmrnzP2z2fl6nE7Hl/8kt1uw8YgSE4+fTqkfjoS8tYBJ5w4lvE6BBegGSBCqiahCT5nCh/xOrObw5yCJsueAyY8KkClRH2IHDkJuDKMCF5fXiTZ84ateTJxHbQQRu6r+ZYj+6sW9Mrms7PPnId5mUbB1GhHb2qLDl08b1lDiB/Ca4veMQjnk2rjoTsTCWwWm6e5bhYUvmh1wS/40tFsoOR+CgNQsee8w2st6wzCfdcy80cZoFd0KI9tH6Z7PhZAZ/koMgeXEPkSNOdWEXPPvOd2bntFSg6St5UUaU98HFFXSa/tnqYUDm+5KOwzGMYfAeL2iMExP19yhDRGuH8ECT5VPjRfJLGkOwall1CjfkVSKOgyQyRw12p/iSmruxI+PpvtWJ3jETzZuT1mPoqvCDn+AUTtGHOm+zO+kawL+zh5kwKVtFc9LkIb4AMmSV1sOSMM/ncxh2HOb/w6RNaHMLVuI3rWN8p8kwIc9/iF8teWHA8Aa+4wa5CaGJ38GUkrxdHpBZvdJ5TiqtG8WZgNE/mjodusRafsFTLoLh+B0zyXhqHJ27jy62UQ/Cr4uJvqXdMQm/btQ1nILRTZGiUYqFA3RTe1uX8WoSDFuPusr5MptzWOqXv4a4q1eIZ2yXey8lDTRXI0WjxIukAo3Y/oxae4Cw="
+      secure: el8DAASnC2Y5ovuSNtbmOwkDuhtZTDpFWCsbe83lafGlyAerzczqqzDxoqMfq35N37ImaFa35C24fCaZBBvpaH5BLHw/haQOWNW1M6k9vy/sxaPkxJWu9xsPx0RnxCqDC5JfoZZStwjzhi+sPVKyR5ypYKlXGYpp6gG5JWJLfzs8hH/KkI/KkIZ/2B6E7vsJcvY+ALqq+FgaLyVZcWm4lfwYrXvBHc5CaXlQrMGfBGo31FbbFI1kUjls7XvvNR+7x5NoM/blpuc44ZT5/xlZYIOZ/taWUB9m23QuQjAPQ3z9PYxkDB5fIITTe4oG3AuJwZDsRyr8sPkLmpl/QEnVAnemxeQfobz24UxXSHJFz6S3JAa2aDaJdmggNetlHLA9aXeuzOtNPvyta45/d3U/OKobV4Xbc4+S3sh+OoPYcIng7s8qrrE6m1dbBIoPKxIVN4+9ImXHeiLTceaHhcs07Gcpg1i+bIZ/e3P1eNbh1P86fHXDibWRYB/ZMePV7YQ6EV0brG/djL+Ip4mna3RMjAuzIuhNSkJVqR91wwoVro9fh5IOALKb6p0XRBarGor8/Zd3M5aEzHPtbD+MpTsQ6xZPZO6D+ZK0dvX9gTsYMCg4YN0rqS4USnuia4RnpZnu9P2xMdPJm1FwashLjYdsPO5yGdJ4Bv5UsaD8uRarebE=
     template:
       - "%{commit_subject}"
-      - "build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) @%{branch}"
-      - "by %{author} %{result} in %{duration}"
+      - build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) @%{branch}
+      - by %{author} %{result} in %{duration}
     on_success: change
     on_failure: always
-
 env:
   jobs:
     - MAVEN_TAG='latest'     REPO='s2i-builder-maven' TAG='latest'
@@ -33,17 +27,14 @@ env:
     - MAVEN_TAG='3-jdk-10'   REPO='s2i-builder-maven' TAG='3-jdk-10'
     - MAVEN_TAG='3-jdk-9'    REPO='s2i-builder-maven' TAG='3-jdk-9'
     - MAVEN_TAG='3-jdk-8'    REPO='s2i-builder-maven' TAG='3-jdk-8'
-    # - MAVEN_TAG='3-jdk-7'    REPO='s2i-builder-maven' TAG='3-jdk-7'
   global:
-    - secure: "TSzB08OmlOviBB0ZWXVZbuedEEBzd9yQ10mY4K6WXw+5LiCxUGcgUwWywgR5lHF89+GjpKG+iRXHIplXl4tqSYSRXx1JP4h6BFj9vgMct0xIDOnVLhj5hhGQVM7zNf5ni3JNfW08ZkCEcBkMFVwszndYrT5mXYzAMnDUXzlIc6U65BrkPIt1uL1nd2rr3PFRjlyKENNnZ3vefjPO7JmqV+nBNWL5Fm14lumx7Fkb+eGq0FmJYABraAc+B5swO1DWvnW6tJdMCnbL5iJrwQSDoWn+eYXwukxV1XYdfkVYR2vGEBXi27mAK79ib/c15gP5vNc+KS1LQtJAJubbBVgfDr/USXl2LieE9V6J2PzqV1G7RrwWr2DKLrKT9HbBn8BB+KVnskGnKGTljEpM1xvbCYee7vT4eMRuvzCsTTfdHJ/aATp5XRx1TXdH7Xt2CO2w9p18KImT+X24GQd7ZOutBA2td7n8k9RPBvHHPB45xGOtiCZsBC3BfqMn7aqnH7UQlqLFrVWRfRuihvhP8LNrB2+6459jMcWIoUGXFnSOrFOVfdlHmorV6KP6msP3xMUrDyixNK4eLcC4DPNzYTOw4Cwj8Viy/jmumE+IKa+/FF+G9K2JdonJNlypihii/uoFCnYtKkiQq/vtNBA0ZtNcIqWXymDCGUQpcV+Kwp9hg7Q="
-
+    - secure: TSzB08OmlOviBB0ZWXVZbuedEEBzd9yQ10mY4K6WXw+5LiCxUGcgUwWywgR5lHF89+GjpKG+iRXHIplXl4tqSYSRXx1JP4h6BFj9vgMct0xIDOnVLhj5hhGQVM7zNf5ni3JNfW08ZkCEcBkMFVwszndYrT5mXYzAMnDUXzlIc6U65BrkPIt1uL1nd2rr3PFRjlyKENNnZ3vefjPO7JmqV+nBNWL5Fm14lumx7Fkb+eGq0FmJYABraAc+B5swO1DWvnW6tJdMCnbL5iJrwQSDoWn+eYXwukxV1XYdfkVYR2vGEBXi27mAK79ib/c15gP5vNc+KS1LQtJAJubbBVgfDr/USXl2LieE9V6J2PzqV1G7RrwWr2DKLrKT9HbBn8BB+KVnskGnKGTljEpM1xvbCYee7vT4eMRuvzCsTTfdHJ/aATp5XRx1TXdH7Xt2CO2w9p18KImT+X24GQd7ZOutBA2td7n8k9RPBvHHPB45xGOtiCZsBC3BfqMn7aqnH7UQlqLFrVWRfRuihvhP8LNrB2+6459jMcWIoUGXFnSOrFOVfdlHmorV6KP6msP3xMUrDyixNK4eLcC4DPNzYTOw4Cwj8Viy/jmumE+IKa+/FF+G9K2JdonJNlypihii/uoFCnYtKkiQq/vtNBA0ZtNcIqWXymDCGUQpcV+Kwp9hg7Q=
 before_install:
-  - openssl aes-256-cbc -K $encrypted_4b36a787d569_key -iv $encrypted_4b36a787d569_iv -in .travis/token.enc -out .travis/token -d
+  - openssl aes-256-cbc -K $encrypted_4b36a787d569_key -iv $encrypted_4b36a787d569_iv
+    -in .travis/token.enc -out .travis/token -d
   - export PATH=$(pwd)/.travis:$PATH
-
 install:
   - docker run --rm -v $(pwd)/.travis:/mnt quay.io/openshift/origin-cli:latest cp /usr/bin/oc /mnt/oc
-
 script:
   - |
     set -e
