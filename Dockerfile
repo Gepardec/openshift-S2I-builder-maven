@@ -1,4 +1,4 @@
-FROM maven:3-jdk-8
+FROM maven:3-jdk-11
 
 ENV BUILDER_CONTEXT_DIR="" \
     BUILDER_MVN_MIRROR="" \
@@ -16,7 +16,7 @@ COPY s2i ${S2IDIR}
 
 ARG APPDIR="/deployments"
 RUN mkdir -p ${APPDIR}/target && \
-    chgrp -R 0 ${APPDIR} ${S2IDIR} /usr/share/maven/ref/ && \ 
+    chgrp -R 0 ${APPDIR} ${S2IDIR} /usr/share/maven/ref/ && \
     chmod -R g+rwX ${APPDIR} ${S2IDIR} /usr/share/maven/ref/ && \
     mkdir -p /.npm && \
     chgrp -R 0 /.npm && \
